@@ -1,6 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import Icon from "../Icon";
+import PropTypes from "prop-types";
 
 export default function Button({
   children,
@@ -13,6 +14,7 @@ export default function Button({
   color,
   outline,
   disabled,
+  click,
 }) {
   if (to) {
     return (
@@ -44,6 +46,7 @@ export default function Button({
           "w-100": block,
         })}
         disabled={disabled}
+        onClick={click}
       >
         {children}
         {icon && <Icon name={icon} />}
@@ -51,3 +54,17 @@ export default function Button({
     );
   }
 }
+
+Button.propTypes = {
+  children: PropTypes.string.isRequired,
+  to: PropTypes.string,
+  icon: PropTypes.string,
+  className: PropTypes.string,
+  size: PropTypes.string,
+  active: PropTypes.bool,
+  disabled: PropTypes.bool,
+  block: PropTypes.bool,
+  color: PropTypes.string,
+  outline: PropTypes.string,
+  click: PropTypes.func,
+};

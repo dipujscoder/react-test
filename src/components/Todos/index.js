@@ -1,32 +1,133 @@
-import React from "react";
+import React, { useCallback, useState, memo } from "react";
 import Button from "../Button";
+import PropTypes from "prop-types";
 
-export default function Todos() {
+const Todos = () => {
+  const [list, setList] = useState([]);
+  const [input, setInput] = useState("");
+  const [error, setError] = useState("");
+  const [id, setId] = useState(1);
+  const [type, setType] = useState("add");
+  const [editItem, setEditItem] = useState({});
+  const [deleteItem, setDeleteItem] = useState({});
+
+  const handleAddTodo = () => {
+    if (input.length > 0) {
+      const data = {
+        id,
+        item: input,
+        status: false,
+      };
+
+      if (type === "add") {
+        setList((state) => [...state, data]);
+        setInput("");
+        setId((state) => state + 1);
+      } else {
+        const updataData = list.map((e) => {
+          if (e.id === editItem.id) {
+            return {
+              ...e,
+              item: input,
+            };
+          } else {
+            return e;
+          }
+        });
+
+        setList(updataData);
+        setInput("");
+        setType("add");
+      }
+    } else {
+      setError("You have no write any text!");
+    }
+  };
+
+  const handleEditTodo = (item) => {
+    setInput(item.item);
+    setEditItem(item);
+    setType("edit");
+  };
+  const handleDeleteItem = (item) => {
+    setDeleteItem(item);
+
+    if (window.confirm("Delete Item?")) {
+      const _updateList = list.filter((e) => e.id !== item.id);
+
+      setList(_updateList);
+    }
+  };
+
   return (
     <div>
       <h1>Todo List</h1>
 
-      <div className="input-group mb-3">
-        <input type="text" className="form-control" placeholder="Add Todo" />
-        <button className="input-group-text" id="basic-addon1">
-          Add
-        </button>
+      <div>
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Add New Item"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <button
+            className="input-group-text"
+            id="basic-addon1"
+            onClick={handleAddTodo}
+          >
+            {type === "add" ? "Add" : "Edit"}
+          </button>
+        </div>
+
+        {error && <p className="text-danger">{error}</p>}
       </div>
 
       <ul className="list-unstyled">
-        <li className="d-flex">
-          <span className="mdi mdi-circle-outline me-2"></span>
-          <span>One</span>
-          <Button
-            className="ms-auto"
-            icon="mdi-delete"
-            size="sm"
-            block
-            color="success"
-            disabled
-          />
-        </li>
+        {list.length > 0 &&
+          list.map((e) => {
+            return (
+              <li className="d-flex mb-2" key={e.id}>
+                <span className="mdi mdi-circle-outline me-2"></span>
+                <span>{e.item}</span>
+                <div className="ms-auto">
+                  <Button
+                    className="me-2"
+                    icon="mdi-pencil"
+                    size="sm"
+                    color="success"
+                    outline
+                    click={() => handleEditTodo(e)}
+                  />
+                  <Button
+                    icon="mdi-delete"
+                    size="sm"
+                    color="danger"
+                    outline
+                    click={() => handleDeleteItem(e)}
+                  />
+                </div>
+              </li>
+            );
+          })}
       </ul>
     </div>
   );
-}
+};
+
+Todos.propTypes = {
+  children: PropTypes.string.isRequired,
+  to: PropTypes.string,
+  icon: PropTypes.string,
+  className: PropTypes.string,
+  size: PropTypes.string,
+  active: PropTypes.bool,
+  disabled: PropTypes.bool,
+  block: PropTypes.bool,
+  color: PropTypes.string,
+  outline: PropTypes.string,
+  click: PropTypes.func,
+};
+
+export default Todos;
