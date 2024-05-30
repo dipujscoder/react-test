@@ -116,18 +116,4 @@ const Todos = () => {
   );
 };
 
-Todos.propTypes = {
-  children: PropTypes.string.isRequired,
-  to: PropTypes.string,
-  icon: PropTypes.string,
-  className: PropTypes.string,
-  size: PropTypes.string,
-  active: PropTypes.bool,
-  disabled: PropTypes.bool,
-  block: PropTypes.bool,
-  color: PropTypes.string,
-  outline: PropTypes.string,
-  click: PropTypes.func,
-};
-
 export default Todos;
