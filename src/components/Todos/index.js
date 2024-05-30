@@ -1,6 +1,5 @@
-import React, { useCallback, useState, memo } from "react";
+import React, { useState } from "react";
 import Button from "../Button";
-import PropTypes from "prop-types";
 
 const Todos = () => {
   const [list, setList] = useState([]);
@@ -9,7 +8,6 @@ const Todos = () => {
   const [id, setId] = useState(1);
   const [type, setType] = useState("add");
   const [editItem, setEditItem] = useState({});
-  const [deleteItem, setDeleteItem] = useState({});
 
   const handleAddTodo = () => {
     if (input.length > 0) {
@@ -50,8 +48,6 @@ const Todos = () => {
     setType("edit");
   };
   const handleDeleteItem = (item) => {
-    setDeleteItem(item);
-
     if (window.confirm("Delete Item?")) {
       const _updateList = list.filter((e) => e.id !== item.id);
 
